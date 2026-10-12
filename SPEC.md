@@ -6128,6 +6128,16 @@ would produce. It failed at three independent layers, reporting the gained
 symbol `ffi_prep_cif`, the gained library `libffi.8.dylib`, and the denylist
 hit, so an interpreter cannot quietly bring libffi with it.
 
+**A compiled shell is a different route.** `iyi shell` retains successful source
+inputs, compiles the entire session with the native compiler and runs it in a
+fresh process on each submission. It follows Koja's whole-session replay/reset
+model without adding an interpreter. `:reset` clears source history, not external
+side effects; a preload survives reset. The startup line states this explicitly.
+Errors drop the candidate input. `bench/shell_exercise.py` checks native results,
+multiline input, replayed side effects, reset, local imports and preloading.
+This provides an interactive development loop without implementing semantics
+twice; it does not preserve a live heap or avoid replaying earlier writes.
+
 ### III.12 The sandbox: **BUILT, by subtraction; measured by `bench/sandbox_story.sh`**
 
 Untrusted code needs a container, and generated code is the untrusted code

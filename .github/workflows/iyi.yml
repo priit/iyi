@@ -411,6 +411,9 @@ jobs:
       - name: What the verbs say when they refuse
         run: bash bench/verbs_exercise.sh
 
+      - name: Native compiled shell
+        run: python3 bench/shell_exercise.py
+
       # And the first verb a person types. `iyi init` was refused with a
       # sentence about a checkout the zip does not carry; it writes a
       # project now, and the claim is that all four files are right the

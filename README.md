@@ -547,6 +547,55 @@ directory for browsing and searching iyi's standard library modules and
 iyi packages on GitHub. Browse by category, follow a package to its source,
 and add a dependency with `iyi get` as described above.
 
+### A compiled shell
+
+```console
+$ iyi shell
+  +-----+  iyi shell v0.16.2
+  | iyi |  ":help" for commands, ":q" or "exit" to quit
+  +-----+  ~/apps/ct
+
+Each input reruns the whole session and :reset starts fresh.
+
+iyi(main):001> x = 21
+iyi(main):002> x * 2
+42
+iyi(main):003> :reset
+iyi(main):001> :q
+```
+
+The shell uses the native compiler and runtime, not an interpreter. Successful
+input blocks accumulate as source; each new input compiles and runs the whole
+session in a fresh process. This includes earlier side effects: an insert, file
+write or explicit `puts` is executed again with later inputs. `:reset` clears
+input history; it does not undo changes outside the process.
+
+The interactive greeting shows the iyi version, command hint and working
+directory, abbreviated with `~` when inside your home. The logo is colored in
+a supported terminal and respects `NO_COLOR` and `TERM=dumb`. The IRB-inspired prompt
+numbers every entered line, uses `*` for multiline continuations and restarts
+at `001` after a session reset. Piped input keeps the compact one-line greeting
+and omits prompts.
+
+Launch it from your project root to use local imports and `iyi.mod` dependencies.
+`iyi shell --preload prepare.iyi` starts with a complete iyi source file containing
+your module header, imports and setup; that source stays after reset and runs
+again with each input. Multiline blocks, brackets and strings continue until
+complete. Failed inputs are dropped from history, without undoing any side
+effects they already caused. Expressions print their native `to_s` result;
+declarations and assignments stay silent. `--no-print` leaves all output to your
+explicit `puts` calls. Submitted programs have closed stdin so they cannot
+consume subsequent shell commands. `:help`, `:state`, `:reset` and `:quit` (or
+`:q`, bare `exit` at a fresh prompt, or EOF) manage the session. An `exit(0)`
+expression still goes to the compiler. This first version reads terminal lines without
+line editing, tab completion or persistent command history.
+
+Many thanks to **Henry Popp, Koja's creator**, for the inspiration. Koja's
+[shell](https://github.com/koja-lang/koja/tree/main/crates/koja-shell) provided
+the model for accumulated input, whole-session execution and reset. iyi uses
+native compilation in place of Koja's IR interpreter; it adds no runtime
+interpreter or libffi dependency.
+
 ### An editor, in one stanza
 
 `iyi lsp` speaks the Language Server Protocol over stdio; there is nothing

@@ -168,6 +168,9 @@ class Iyi::Command
       # Exact, like `doc`: `t` stays `tool`'s.
       options.shift
       test
+    when command == "shell"
+      options.shift
+      shell
     when command == "vet"
       # Exact, like `test`: `v` stays `version`'s.
       options.shift

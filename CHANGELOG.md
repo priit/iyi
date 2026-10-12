@@ -2,6 +2,20 @@
 
 ## Unreleased
 
+### Added
+
+- **`iyi shell`**, a native compiled session inspired by Henry Popp's Koja shell.
+  Each submitted input compiles and reruns the accumulated source, with normal
+  iyi imports and project dependencies. Multiline input, native expression
+  output, `--preload`, `--no-print`, `:help`, `:state`, `:reset` and `:quit` are
+  supported. The interactive greeting and prompt follow Ruby IRB's layout:
+  an iyi wordmark, version, command hint, working directory and numbered
+  `iyi(main):001>` prompts (`*` for continuations). The startup line explains
+  replay and reset; errors discard only
+  the failing input and never promise rollback of external effects. No runtime
+  interpreter or libffi is added. `bench/shell_exercise.py` checks the real CLI,
+  including repeated side effects, errors, imports and reset.
+
 ### Fixed
 
 - **A captured local that a kept block assigns is refused, as one

@@ -9,12 +9,13 @@
 # The commands left out are left out on purpose. `init` and `spec` belong to a
 # language with a package layout and a spec runner, and iyi has neither. The
 # playground and the documentation generator are not here at all: they went the
-# way the interpreter went, for the reason SPEC.md V.11 gives — and so, now,
-# has the `repl` slice that briefly reopened that call: a session on the macro
+# way the interpreter went, for the reason SPEC.md V.11 gives — as did the
+# `repl` slice that briefly reopened that call: a session on the macro
 # evaluator answered iyi code with the other language's library, so `"ab" * -3`
 # came back "Negative argument" where the compiler says "negative count: -3".
 # Two implementations of the semantics is what V.11 objected to, and the
-# smaller one is still one too many.
+# smaller one is still one too many. `shell` instead compiles and runs native
+# iyi, retaining source history rather than interpreting it.
 {% raise("Please use `make iyi` to build it, or set the i_know_what_im_doing flag if you know what you're doing") unless env("CRYSTAL_HAS_WRAPPER") || flag?("i_know_what_im_doing") %}
 
 require "log"
@@ -38,6 +39,7 @@ module Iyi
         get                      add a requirement to iyi.mod, or move one; -u brings all up to date
         build                    build an executable
         run                      build and run a program (default)
+        shell                    interactive compiled session; :reset clears history
         mod                      inspect a .iyimod module artifact; `mod tidy` fixes iyi.mod
         doc                      print a module's exported surface, or a prelude type's
         test                     run every *_test.iyi: exit 0 passes, anything else fails
@@ -76,7 +78,7 @@ module Iyi
   # artifacts it writes and the file it arrived in cannot disagree.
   VERSION = Iyi::Config.iyi_version
 
-  DELEGATED = %w(init get build run mod env clear_cache tool daemon test doc lsp vet check fix bind migrate mcp)
+  DELEGATED = %w(init get build run shell mod env clear_cache tool daemon test doc lsp vet check fix bind migrate mcp)
 
   # The ones that belong to Crystal and are still in the binary underneath.
   # Named rather than swallowed, because "unknown command" would be a lie.
